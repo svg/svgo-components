@@ -1,0 +1,10 @@
+{
+  "packageManager": "yarn@3.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2"
+  }
+}
