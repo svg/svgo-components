@@ -1105,6 +1105,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@svgo/jsx", "workspace:packages/svgo-jsx"],
             ["css-tree", "npm:1.1.3"],
+            ["prettier", "npm:2.3.2"],
             ["svgo", "npm:2.3.1"]
           ],
           "linkType": "SOFT",

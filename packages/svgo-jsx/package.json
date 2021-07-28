@@ -1,9 +1,15 @@
 {
   "name": "@svgo/jsx",
-  "description": "Transform SVG into React components",
+  "description": "Transform SVG into JSX components",
   "packageManager": "yarn@3.0.0",
+  "type": "module",
+  "bin": "./svgo-jsx-cli.js",
+  "exports": "./svgo-jsx.js",
   "dependencies": {
     "css-tree": "^1.1.3",
     "svgo": "^2.3.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2"
   }
 }

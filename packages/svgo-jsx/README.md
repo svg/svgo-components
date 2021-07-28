@@ -1,1 +1,1 @@
-# svgo-jsx
+# @svgo/jsx
