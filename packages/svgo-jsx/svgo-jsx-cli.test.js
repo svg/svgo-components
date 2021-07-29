@@ -8,10 +8,6 @@ const exec = util.promisify(child_process.exec);
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
 test("cli converts svg into component with default config", async () => {
-  // support node 12
-  await (fs.rm || fs.rmdir)(path.join(dir, "./fixtures/output"), {
-    recursive: true,
-  });
   const cli = path.join(dir, "./svgo-jsx-cli.js");
   const config = path.join(dir, "./fixtures/svgo-jsx.config.js");
   const { stdout } = await exec(`node ${cli} ${config}`);
