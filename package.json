@@ -3,8 +3,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS=\"--experimental-vm-modules\" yarn jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules yarn jest"
   },
   "devDependencies": {
     "jest": "^27.0.6",

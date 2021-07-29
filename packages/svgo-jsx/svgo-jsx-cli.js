@@ -41,7 +41,7 @@ let count = 0;
 
 const cwd = process.cwd();
 const { config } = await import(
-  configFile ?? path.join(cwd, './svgo-jsx.config.js')
+  configFile || path.join(cwd, './svgo-jsx.config.js')
 );
 if (config.inputDir == null) {
   throw Error('inputDir string should be specified');
@@ -62,13 +62,13 @@ await Promise.all(
       const jsx = convertSvgToJsx({
         file: svgFile,
         svg,
-        svgProps: config.svgProps ?? { '{...props}': null },
-        plugins: config.plugins ?? extendDefaultPlugins([]),
+        svgProps: config.svgProps || { '{...props}': null },
+        plugins: config.plugins || extendDefaultPlugins([]),
       });
 
-      const template = config.template ?? defaultTemplate;
+      const template = config.template || defaultTemplate;
       const transformFilename =
-        config.transformFilename ?? defaultTransformFilename;
+        config.transformFilename || defaultTransformFilename;
       const componentName = transformComponentName(dirent.name);
       const jsxFilename = transformFilename(dirent.name);
       const jsxFile = path.join(config.outputDir, jsxFilename);

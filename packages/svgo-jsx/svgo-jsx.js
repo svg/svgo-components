@@ -35,7 +35,7 @@ const convertAttributes = (node, svgProps) => {
   // use map to override existing attributes with passed props
   const props = new Map();
   for (const [name, value] of attributes) {
-    const newName = attributesMappings[name] ?? name;
+    const newName = attributesMappings[name] || name;
     if (newName === 'style') {
       const styleObject = convertStyleToObject(value);
       props.set(newName, `{${JSON.stringify(styleObject)}}`);
