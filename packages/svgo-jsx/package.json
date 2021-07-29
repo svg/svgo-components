@@ -1,10 +1,12 @@
 {
   "name": "@svgo/jsx",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Transform SVG into JSX components",
   "packageManager": "yarn@3.0.0",
   "type": "module",
-  "bin": "./svgo-jsx-cli.js",
+  "bin": {
+    "svgo-jsx": "./svgo-jsx-cli.js"
+  },
   "exports": "./svgo-jsx.js",
   "files": [
     "./svgo-jsx-cli.js",
