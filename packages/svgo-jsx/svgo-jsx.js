@@ -1,13 +1,13 @@
-import { optimize } from 'svgo';
-import csstree from 'css-tree';
-import { attributesMappings } from './mappings.js';
+import { optimize } from "svgo";
+import csstree from "css-tree";
+import { attributesMappings } from "./mappings.js";
 
-const convertStyleProperty = property => {
-  if (property.startsWith('--')) {
+const convertStyleProperty = (property) => {
+  if (property.startsWith("--")) {
     return property;
   }
   // Microsoft vendor-prefixes are uniquely cased
-  if (property.startsWith('-ms-')) {
+  if (property.startsWith("-ms-")) {
     property = property.slice(1);
   }
   return property
@@ -15,14 +15,14 @@ const convertStyleProperty = property => {
     .replace(/-(\w|$)/g, (dashChar, char) => char.toUpperCase());
 };
 
-const convertStyleToObject = style => {
+const convertStyleToObject = (style) => {
   const styleObject = {};
   const ast = csstree.parse(style, {
-    context: 'declarationList',
+    context: "declarationList",
     parseValue: false,
   });
-  csstree.walk(ast, node => {
-    if (node.type === 'Declaration') {
+  csstree.walk(ast, (node) => {
+    if (node.type === "Declaration") {
       // console.log(node);
       styleObject[convertStyleProperty(node.property)] = node.value.value;
     }
@@ -36,20 +36,20 @@ const convertAttributes = (node, svgProps) => {
   const props = new Map();
   for (const [name, value] of attributes) {
     const newName = attributesMappings[name] || name;
-    if (newName === 'style') {
+    if (newName === "style") {
       const styleObject = convertStyleToObject(value);
       props.set(newName, `{${JSON.stringify(styleObject)}}`);
     } else {
       props.set(newName, JSON.stringify(value));
     }
   }
-  if (node.name === 'svg' && svgProps) {
+  if (node.name === "svg" && svgProps) {
     for (const [name, value] of Object.entries(svgProps)) {
       // delete previous prop before setting to reset order
       if (value == null) {
         props.delete(name);
         props.set(name, null);
-      } else if (value.startsWith('{')) {
+      } else if (value.startsWith("{")) {
         props.delete(name);
         props.set(name, value);
       } else {
@@ -58,7 +58,7 @@ const convertAttributes = (node, svgProps) => {
       }
     }
   }
-  let result = '';
+  let result = "";
   for (const [name, value] of props) {
     if (value == null) {
       result += ` ${name}`;
@@ -71,8 +71,8 @@ const convertAttributes = (node, svgProps) => {
 
 const convertXastToJsx = (node, svgProps) => {
   switch (node.type) {
-    case 'root': {
-      let renderedChildren = '';
+    case "root": {
+      let renderedChildren = "";
       let renderedChildrenCount = 0;
       for (const child of node.children) {
         const renderedChild = convertXastToJsx(child, svgProps);
@@ -87,33 +87,33 @@ const convertXastToJsx = (node, svgProps) => {
         return `<>${renderedChildren}</>`;
       }
     }
-    case 'element': {
+    case "element": {
       const name = node.name;
       if (node.children.length === 0) {
         return `<${name}${convertAttributes(node, svgProps)} />`;
       }
-      let renderedChildren = '';
+      let renderedChildren = "";
       for (const child of node.children) {
         renderedChildren += convertXastToJsx(child, svgProps);
       }
       return `<${name}${convertAttributes(
         node,
-        svgProps,
+        svgProps
       )}>${renderedChildren}</${name}>`;
     }
-    case 'text':
-      throw Error('Text is not supported yet');
+    case "text":
+      throw Error("Text is not supported yet");
     // return `{${JSON.stringify(node.value)}}`;
 
-    case 'cdata':
-      throw Error('CDATA is not supported yet');
+    case "cdata":
+      throw Error("CDATA is not supported yet");
     // return `{${JSON.stringify(node.value)}}`;
-    case 'comment':
+    case "comment":
       return `{/* ${node.value} */}`;
-    case 'doctype':
-      return '';
-    case 'instruction':
-      return '';
+    case "doctype":
+      return "";
+    case "instruction":
+      return "";
     default:
       throw Error(`Unexpected node type "${node.type}"`);
   }
@@ -122,10 +122,10 @@ const convertXastToJsx = (node, svgProps) => {
 export const convertSvgToJsx = ({ file, svg, svgProps, plugins = [] }) => {
   let xast;
   const extractXast = {
-    type: 'visitor',
-    name: 'extract-xast',
+    type: "visitor",
+    name: "extract-xast",
     active: true,
-    fn: root => {
+    fn: (root) => {
       xast = root;
       return {};
     },
