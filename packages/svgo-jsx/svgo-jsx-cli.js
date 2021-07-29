@@ -1,7 +1,7 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { extendDefaultPlugins } from 'svgo';
-import { convertSvgToJsx } from './svgo-jsx.js';
+import fs from "fs/promises";
+import path from "path";
+import { extendDefaultPlugins } from "svgo";
+import { convertSvgToJsx } from "./svgo-jsx.js";
 
 const defaultTemplate = ({
   sourceFile,
@@ -16,53 +16,57 @@ export const ${componentName} = (props) => {
 }
 `;
 
-const defaultTransformFilename = filename => {
+const defaultTransformFilename = (filename) => {
   const basename = path.basename(filename, path.extname(filename));
-  return basename + '.js';
+  return basename + ".js";
 };
 
-const pascalcase = string => {
+const pascalcase = (string) => {
   return string
     .replace(/[^A-Z0-9]+([A-Z0-9])?/gi, (invalid, char) =>
-      char == null ? '' : char.toUpperCase(),
+      char == null ? "" : char.toUpperCase()
     )
-    .replace(/^[a-z]/, char => char.toUpperCase());
+    .replace(/^[a-z]/, (char) => char.toUpperCase());
 };
 
-const transformComponentName = filename => {
+const transformComponentName = (filename) => {
   const basename = path.basename(filename, path.extname(filename));
   // digits cannot start variable name
-  return pascalcase(basename).replace(/^[0-9]/, char => `_${char}`);
+  return pascalcase(basename).replace(/^[0-9]/, (char) => `_${char}`);
 };
 
 const start = process.hrtime.bigint();
-const [configFile] = process.argv.slice(2);
+
+const [rawConfigFile = "./svgo-jsx.config.js"] = process.argv.slice(2);
+const configFile = path.isAbsolute(rawConfigFile)
+  ? rawConfigFile
+  : path.join(process.cwd(), rawConfigFile);
+const configDir = path.dirname(configFile);
 let count = 0;
 
 const cwd = process.cwd();
-const { config } = await import(
-  configFile || path.join(cwd, './svgo-jsx.config.js')
-);
+const { config } = await import(configFile);
 if (config.inputDir == null) {
-  throw Error('inputDir string should be specified');
+  throw Error("inputDir string should be specified");
 }
 if (config.outputDir == null) {
-  throw Error('output string should be specified');
+  throw Error("output string should be specified");
 }
 
-const list = await fs.readdir(path.join(cwd, config.inputDir), {
-  withFileTypes: true,
-});
+const inputDir = path.join(configDir, config.inputDir);
+const outputDir = path.join(configDir, config.outputDir);
+
+const list = await fs.readdir(inputDir, { withFileTypes: true });
 await Promise.all(
-  list.map(async dirent => {
+  list.map(async (dirent) => {
     if (dirent.isFile()) {
       count += 1;
-      const svgFile = path.join(config.inputDir, dirent.name);
-      const svg = await fs.readFile(path.join(cwd, svgFile), 'utf-8');
+      const svgFile = path.join(inputDir, dirent.name);
+      const svg = await fs.readFile(svgFile, "utf-8");
       const jsx = convertSvgToJsx({
-        file: svgFile,
+        file: path.relative(configDir, svgFile),
         svg,
-        svgProps: config.svgProps || { '{...props}': null },
+        svgProps: config.svgProps || { "{...props}": null },
         plugins: config.plugins || extendDefaultPlugins([]),
       });
 
@@ -71,17 +75,17 @@ await Promise.all(
         config.transformFilename || defaultTransformFilename;
       const componentName = transformComponentName(dirent.name);
       const jsxFilename = transformFilename(dirent.name);
-      const jsxFile = path.join(config.outputDir, jsxFilename);
+      const jsxFile = path.join(outputDir, jsxFilename);
       const component = template({
-        sourceFile: svgFile,
-        targetFile: jsxFile,
+        sourceFile: path.relative(configDir, svgFile),
+        targetFile: path.relative(configDir, jsxFile),
         componentName,
         jsx,
       });
-      await fs.mkdir(path.join(cwd, config.outputDir), { recursive: true });
-      await fs.writeFile(path.join(cwd, jsxFile), component);
+      await fs.mkdir(outputDir, { recursive: true });
+      await fs.writeFile(jsxFile, component);
     }
-  }),
+  })
 );
 
 const end = process.hrtime.bigint();
