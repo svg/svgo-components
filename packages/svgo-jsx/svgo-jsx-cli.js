@@ -3,6 +3,8 @@ import path from "path";
 import { extendDefaultPlugins } from "svgo";
 import { convertSvgToJsx } from "./svgo-jsx.js";
 
+const start = process.hrtime.bigint();
+
 const defaultTemplate = ({
   sourceFile,
   componentName,
@@ -34,8 +36,6 @@ const transformComponentName = (filename) => {
   // digits cannot start variable name
   return pascalcase(basename).replace(/^[0-9]/, (char) => `_${char}`);
 };
-
-const start = process.hrtime.bigint();
 
 const [rawConfigFile = "./svgo-jsx.config.js"] = process.argv.slice(2);
 const configFile = path.isAbsolute(rawConfigFile)
