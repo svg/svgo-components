@@ -130,3 +130,7 @@ Produces jsx without component wrapper.
 - svg: string with svg file content
 - svgProps: same object as above without any default
 - plugins: svgo plugins array without any default
+
+## License and Copyright
+
+This software is released under the terms of the MIT license.
