@@ -37,6 +37,12 @@ const transformComponentName = (filename) => {
   return pascalcase(basename).replace(/^[0-9]/, (char) => `_${char}`);
 };
 
+const defaultSvgProps = { "{...props}": null };
+
+const defaultPlugins = extendDefaultPlugins([
+  { name: "removeViewBox", active: false },
+]);
+
 const [rawConfigFile = "./svgo-jsx.config.js"] = process.argv.slice(2);
 const configFile = path.isAbsolute(rawConfigFile)
   ? rawConfigFile
@@ -66,8 +72,8 @@ const run = async () => {
         const jsx = convertSvgToJsx({
           file: path.relative(configDir, svgFile),
           svg,
-          svgProps: config.svgProps || { "{...props}": null },
-          plugins: config.plugins || extendDefaultPlugins([]),
+          svgProps: config.svgProps || defaultSvgProps,
+          plugins: config.plugins || defaultPlugins,
         });
 
         const template = config.template || defaultTemplate;

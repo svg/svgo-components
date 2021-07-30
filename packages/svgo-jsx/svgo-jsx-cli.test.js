@@ -10,7 +10,8 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 test("cli converts svg into component with default config", async () => {
   const cli = path.join(dir, "./svgo-jsx-cli.js");
   const config = path.join(dir, "./fixtures/svgo-jsx.config.js");
-  const { stdout } = await exec(`node ${cli} ${config}`);
+  const { stdout, stderr } = await exec(`node ${cli} ${config}`);
+  expect(stderr).toBe("");
   expect(stdout).toMatch(/Compiled 1 icons in \d+ms/);
   expect(await fs.readFile(path.join(dir, "./fixtures/output/cog.js"), "utf-8"))
     .toMatchInlineSnapshot(`
@@ -18,7 +19,7 @@ test("cli converts svg into component with default config", async () => {
 
     export const Cog = (props) => {
       return (
-        <svg width=\\"24\\" height=\\"24\\" xmlns=\\"http://www.w3.org/2000/svg\\" {...props}><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\" /></svg>
+        <svg width=\\"24\\" height=\\"24\\" viewBox=\\"0 0 24 24\\" xmlns=\\"http://www.w3.org/2000/svg\\" {...props}><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\" /></svg>
       );
     }
     "
