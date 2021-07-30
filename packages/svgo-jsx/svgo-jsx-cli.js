@@ -40,6 +40,7 @@ const transformComponentName = (filename) => {
 const defaultSvgProps = { "{...props}": null };
 
 const defaultPlugins = extendDefaultPlugins([
+  { name: "prefixIds", active: true },
   { name: "removeViewBox", active: false },
 ]);
 
