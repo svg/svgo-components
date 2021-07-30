@@ -44,7 +44,7 @@ const configFile = path.isAbsolute(rawConfigFile)
 const configDir = path.dirname(configFile);
 let count = 0;
 
-(async () => {
+const run = async () => {
   const { config } = await import(configFile);
   if (config.inputDir == null) {
     throw Error("inputDir string should be specified");
@@ -91,4 +91,12 @@ let count = 0;
   const end = process.hrtime.bigint();
 
   console.info(`Compiled ${count} icons in ${(end - start) / BigInt(1e6)}ms`);
-})().catch((error) => console.error(error));
+};
+
+(async () => {
+  try {
+    await run();
+  } catch (error) {
+    console.error(error);
+  }
+})();
