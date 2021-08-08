@@ -2,10 +2,6 @@
 
 Transform SVG into JSX components
 
-Currently supported targets:
-
-- react-dom
-
 ## Usage
 
 Create svgo-jsx.config.js module
@@ -48,6 +44,12 @@ A path relative to config file with SVG files.
 **outputDir**: required string
 
 A path relative to config svgo-jsx will write generated components into.
+
+**target**: optional "react-dom" or "preact"
+
+Default: "react-dom"
+
+Frameworks handle attributes differently. React requires camelised "xlink:href", preact prefer modern "href". Here you can specify desired framework.
 
 **template**: optional function
 
@@ -126,6 +128,7 @@ SVGO plugins option to enable optimisations
 
 Produces jsx without component wrapper.
 
+- target: same string as above
 - file: used for error reporting
 - svg: string with svg file content
 - svgProps: same object as above without any default

@@ -1,4 +1,4 @@
-import { promises as fs } from "fs";
+Import { promises as fs } from "fs";
 import path from "path";
 import { extendDefaultPlugins } from "svgo";
 import { convertSvgToJsx } from "./svgo-jsx.js";

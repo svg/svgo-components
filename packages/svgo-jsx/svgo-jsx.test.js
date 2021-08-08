@@ -193,3 +193,30 @@ test("allow to pass svgo plugins", () => {
     `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24\\" height=\\"24\\"><path d=\\"M0 0h24v24H0z\\" /></svg>"`
   );
 });
+
+test("support preact and ignores namespaced attributes", () => {
+  expect(
+    convertAndFormat({
+      target: "preact",
+      file: "./test.svg",
+      svg: `
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24" xmlns:title="Title">
+          <rect x="0" y="0" width="24" height="24" fill-opacity="0.5" />
+          <use xlink:href="#id" />
+        </svg>
+      `,
+    })
+  ).toMatchInlineSnapshot(`
+    "<svg
+      xmlns=\\"http://www.w3.org/2000/svg\\"
+      version=\\"1.1\\"
+      width=\\"24\\"
+      height=\\"24\\"
+      viewBox=\\"0 0 24 24\\"
+    >
+      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
+      <use href=\\"#id\\" />
+    </svg>;
+    "
+  `);
+});
