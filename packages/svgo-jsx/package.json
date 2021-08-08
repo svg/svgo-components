@@ -1,6 +1,6 @@
 {
   "name": "@svgo/jsx",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Transform SVG into JSX components",
   "packageManager": "yarn@3.0.0",
   "type": "module",
