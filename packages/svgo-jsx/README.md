@@ -35,6 +35,15 @@ You can also specify own config file
 yarn svgo-jsx icons.config.mjs
 ```
 
+## Differences from SVGR
+
+- much smaller install size (4.30MB vs 34MB)
+- 4x better performance
+- svgr is built around babel plugins which is the source of problems above
+
+SVGR heavily inspired this project. Svgo-jsx has less features out of the box
+and focused on simple task to convert SVGO to JSX.
+
 ## Config
 
 **inputDir**: required string
