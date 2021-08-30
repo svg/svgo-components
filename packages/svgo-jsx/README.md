@@ -117,12 +117,21 @@ This function accepts `*.svg` basepath and transforms into whatever format you l
 Default:
 
 ```js
-extendDefaultPlugins([
+[
+  {
+    name: "preset-default",
+    params: {
+      overrides: {
+        // makes icons scaled into width/height box
+        removeViewBox: false,
+      },
+    },
+  },
+  // removes xmlns namespace unnecessary when svg is inlined into html
+  { name: "removeXMLNS" },
   // prevents collision with other components on the page
-  { name: "prefixIds", active: true },
-  // makes icons scaled into width/height box
-  { name: "removeViewBox", active: false },
-]);
+  { name: "prefixIds" },
+]
 ```
 
 SVGO plugins option to enable optimisations

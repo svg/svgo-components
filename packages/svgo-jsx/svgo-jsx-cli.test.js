@@ -23,13 +23,7 @@ test("cli converts svg into component with default config", async () => {
 
 export const Cog = (props) => {
   return (
-    <svg
-      width=\\"24\\"
-      height=\\"24\\"
-      viewBox=\\"0 0 24 24\\"
-      xmlns=\\"http://www.w3.org/2000/svg\\"
-      {...props}
-    >
+    <svg width=\\"24\\" height=\\"24\\" viewBox=\\"0 0 24 24\\" {...props}>
       <circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\" fill=\\"url(#cog_svg__a)\\" />
       <defs>
         <linearGradient

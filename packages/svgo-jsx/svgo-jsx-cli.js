@@ -1,6 +1,5 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { extendDefaultPlugins } from "svgo";
 import { convertSvgToJsx } from "./svgo-jsx.js";
 
 const start = process.hrtime.bigint();
@@ -39,10 +38,18 @@ const transformComponentName = (filename) => {
 
 const defaultSvgProps = { "{...props}": null };
 
-const defaultPlugins = extendDefaultPlugins([
-  { name: "prefixIds", active: true },
-  { name: "removeViewBox", active: false },
-]);
+const defaultPlugins = [
+  {
+    name: "preset-default",
+    params: {
+      overrides: {
+        removeViewBox: false,
+      },
+    },
+  },
+  { name: "removeXMLNS" },
+  { name: "prefixIds" },
+];
 
 const [rawConfigFile = "./svgo-jsx.config.js"] = process.argv.slice(2);
 const configFile = path.isAbsolute(rawConfigFile)

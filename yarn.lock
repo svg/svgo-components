@@ -666,7 +666,7 @@ __metadata:
   dependencies:
     css-tree: ^1.1.3
     prettier: ^2.3.2
-    svgo: ^2.3.1
+    svgo: ^2.5.0
   bin:
     svgo-jsx: ./svgo-jsx-cli.js
   languageName: unknown
@@ -1187,7 +1187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
+"chalk@npm:^4.0.0":
   version: 4.1.1
   resolution: "chalk@npm:4.1.1"
   dependencies:
@@ -1303,6 +1303,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"colorette@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "colorette@npm:1.3.0"
+  checksum: bda403dfba4d032bee4169f2a6436a83ae3da488a53bcb3be92dc44ace056518245cc614b12429d7529493d6b090a119b2523b0d55e8cd6b81ad939a3003c008
+  languageName: node
+  linkType: hard
+
 "combined-stream@npm:^1.0.8":
   version: 1.0.8
   resolution: "combined-stream@npm:1.0.8"
@@ -1312,7 +1319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^7.1.0":
+"commander@npm:^7.2.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
@@ -3732,20 +3739,20 @@ resolve@^1.20.0:
   languageName: node
   linkType: hard
 
-"svgo@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "svgo@npm:2.3.1"
+"svgo@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "svgo@npm:2.5.0"
   dependencies:
     "@trysound/sax": 0.1.1
-    chalk: ^4.1.0
-    commander: ^7.1.0
+    colorette: ^1.3.0
+    commander: ^7.2.0
     css-select: ^4.1.3
-    css-tree: ^1.1.2
+    css-tree: ^1.1.3
     csso: ^4.2.0
     stable: ^0.1.8
   bin:
     svgo: bin/svgo
-  checksum: b222894b62366fb7047b0d398fe126f0a1fb3991a5b1760e0bb3b6a4d32c5a025ee58216f09e00add3c769f2171087267c466516130218ff8bd7857796e24791
+  checksum: 9a07a0e7fceef3a2ca9e3977f0b847749493701368397002ede973699d08afc19780a91fffcf161eacaadeeb082f4c67eb2d6bd1351def81165369e376f6834d
   languageName: node
   linkType: hard
 
