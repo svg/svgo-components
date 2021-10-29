@@ -10,10 +10,11 @@
   "packageManager": "yarn@3.0.0",
   "type": "module",
   "bin": {
-    "svgo-jsx": "./svgo-jsx-cli.js"
+    "svgo-jsx": "./svgo-jsx-bin.js"
   },
   "exports": "./svgo-jsx.js",
   "files": [
+    "./svgo-jsx-bin.js",
     "./svgo-jsx-cli.js",
     "./svgo-jsx.js",
     "./mappings.js"
