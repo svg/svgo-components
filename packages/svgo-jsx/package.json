@@ -5,7 +5,7 @@
   "author": "Bogdan Chadkin <trysound@yandex.ru>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/svg/svgo.git"
+    "url": "git://github.com/svg/svgo-components.git"
   },
   "packageManager": "yarn@3.0.0",
   "type": "module",
