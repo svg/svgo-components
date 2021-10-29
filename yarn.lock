@@ -668,7 +668,7 @@ __metadata:
     prettier: ^2.3.2
     svgo: ^2.5.0
   bin:
-    svgo-jsx: ./svgo-jsx-cli.js
+    svgo-jsx: ./svgo-jsx-bin.js
   languageName: unknown
   linkType: soft
 
