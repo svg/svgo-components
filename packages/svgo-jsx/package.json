@@ -14,10 +14,10 @@
   },
   "exports": "./svgo-jsx.js",
   "files": [
-    "./svgo-jsx-bin.js",
-    "./svgo-jsx-cli.js",
-    "./svgo-jsx.js",
-    "./mappings.js"
+    "svgo-jsx-bin.js",
+    "svgo-jsx-cli.js",
+    "svgo-jsx.js",
+    "mappings.js"
   ],
   "dependencies": {
     "css-tree": "^1.1.3",
