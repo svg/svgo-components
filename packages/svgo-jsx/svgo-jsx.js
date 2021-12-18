@@ -23,7 +23,6 @@ const convertStyleToObject = (style) => {
   });
   csstree.walk(ast, (node) => {
     if (node.type === "Declaration") {
-      // console.log(node);
       styleObject[convertStyleProperty(node.property)] = node.value.value;
     }
   });
@@ -42,14 +41,13 @@ const convertAttributes = (node, target, svgProps) => {
     if (target === "preact") {
       if (name === "xlink:href") {
         newName = "href";
-      } else if (name.indexOf(":") !== -1) {
-        continue;
       }
     }
     if (newName === "style") {
       const styleObject = convertStyleToObject(value);
       props.set(newName, `{${JSON.stringify(styleObject)}}`);
-    } else {
+      // skip attributes with namespaces which are invalid jsx syntax
+    } else if (newName.includes(":") === false) {
       props.set(newName, JSON.stringify(value));
     }
   }
@@ -79,13 +77,18 @@ const convertAttributes = (node, target, svgProps) => {
   return result;
 };
 
-const convertXastToJsx = (node, target, svgProps) => {
+const convertXastToJsx = (node, target, svgProps, components) => {
   switch (node.type) {
     case "root": {
       let renderedChildren = "";
       let renderedChildrenCount = 0;
       for (const child of node.children) {
-        const renderedChild = convertXastToJsx(child, target, svgProps);
+        const renderedChild = convertXastToJsx(
+          child,
+          target,
+          svgProps,
+          components
+        );
         if (renderedChild.length !== 0) {
           renderedChildren += renderedChild;
           renderedChildrenCount += 1;
@@ -99,13 +102,22 @@ const convertXastToJsx = (node, target, svgProps) => {
     }
     case "element": {
       const name = node.name;
+      // collect all components names
+      if (name.startsWith(name[0].toUpperCase())) {
+        components.push(name);
+      }
       const attributes = convertAttributes(node, target, svgProps);
       if (node.children.length === 0) {
         return `<${name}${attributes} />`;
       }
       let renderedChildren = "";
       for (const child of node.children) {
-        renderedChildren += convertXastToJsx(child, target, svgProps);
+        renderedChildren += convertXastToJsx(
+          child,
+          target,
+          svgProps,
+          components
+        );
       }
       return `<${name}${attributes}>${renderedChildren}</${name}>`;
     }
@@ -139,7 +151,7 @@ export const convertSvgToJsx = ({
   let xast;
   const extractXast = {
     type: "visitor",
-    name: "extract-xast",
+    name: "svgo-jsx-extract-xast",
     active: true,
     fn: (root) => {
       xast = root;
@@ -162,7 +174,12 @@ export const convertSvgToJsx = ({
     throw Error(error);
   }
   try {
-    return convertXastToJsx(xast, target, svgProps);
+    const components = [];
+    const jsx = convertXastToJsx(xast, target, svgProps, components);
+    return {
+      jsx,
+      components,
+    };
   } catch (error) {
     throw Error(`${error.message}\nin ${file}`);
   }

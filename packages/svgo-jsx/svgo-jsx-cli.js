@@ -77,7 +77,7 @@ const run = async () => {
         count += 1;
         const svgFile = path.join(inputDir, dirent.name);
         const svg = await fs.readFile(svgFile, "utf-8");
-        const jsx = convertSvgToJsx({
+        const { jsx, components } = convertSvgToJsx({
           file: path.relative(configDir, svgFile),
           svg,
           svgProps: config.svgProps || defaultSvgProps,
@@ -95,6 +95,7 @@ const run = async () => {
           targetFile: path.relative(configDir, jsxFile),
           componentName,
           jsx,
+          components
         });
         await fs.mkdir(outputDir, { recursive: true });
         await fs.writeFile(jsxFile, component);

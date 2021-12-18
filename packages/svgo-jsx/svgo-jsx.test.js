@@ -1,8 +1,12 @@
 import prettier from "prettier";
 import { convertSvgToJsx } from "./svgo-jsx.js";
 
+const format = (code) => {
+  return prettier.format(code, { parser: "babel" });
+};
+
 const convertAndFormat = (options) => {
-  return prettier.format(convertSvgToJsx(options), { parser: "babel" });
+  return format(convertSvgToJsx(options).jsx);
 };
 
 test("render all nodes except doctype and instruction", () => {
@@ -187,7 +191,7 @@ test("allow to pass svgo plugins", () => {
         </svg>
       `,
       plugins: ["preset-default"],
-    })
+    }).jsx
   ).toMatchInlineSnapshot(
     `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24\\" height=\\"24\\"><path d=\\"M0 0h24v24H0z\\" /></svg>"`
   );
@@ -218,4 +222,51 @@ test("support preact and ignores namespaced attributes", () => {
     </svg>;
     "
   `);
+});
+
+test("output list of used components", () => {
+  const { jsx, components } = convertSvgToJsx({
+    file: "./test.svg",
+    svg: `
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24" xmlns:title="Title">
+          <rect x="0" y="0" width="24" height="24" fill-opacity="0.5" />
+          <use xlink:href="#id" />
+        </svg>
+      `,
+    plugins: [
+      {
+        type: "visitor",
+        name: "capital-tags",
+        fn: () => {
+          return {
+            element: {
+              enter: (node) => {
+                if (node.name === "svg") {
+                  node.name = "Svg";
+                }
+                if (node.name === "rect") {
+                  node.name = "Rect";
+                }
+              },
+            },
+          };
+        },
+      },
+    ],
+  });
+  expect(format(jsx)).toMatchInlineSnapshot(`
+"<Svg
+  xmlns=\\"http://www.w3.org/2000/svg\\"
+  xmlnsXlink=\\"http://www.w3.org/1999/xlink\\"
+  version=\\"1.1\\"
+  width=\\"24\\"
+  height=\\"24\\"
+  viewBox=\\"0 0 24 24\\"
+>
+  <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fillOpacity=\\"0.5\\" />
+  <use xlinkHref=\\"#id\\" />
+</Svg>;
+"
+`);
+  expect(components).toEqual(["Svg", "Rect"]);
 });
