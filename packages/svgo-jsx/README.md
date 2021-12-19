@@ -54,11 +54,14 @@ A path relative to config file with SVG files.
 
 A path relative to config svgo-jsx will write generated components into.
 
-**target**: optional "react-dom" or "preact"
+**target**: optional "react-dom", "preact" or "custom"
 
 Default: "react-dom"
 
 Frameworks handle attributes differently. React requires camelised "xlink:href", preact prefer modern "href". Here you can specify desired framework.
+
+"custom" target does not transform tags and attributes and allows to write svgo plugin
+to generate components for custom renerer.
 
 **template**: optional function
 
