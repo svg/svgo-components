@@ -104,7 +104,7 @@ const convertXastToJsx = (node, target, svgProps, components) => {
       const name = node.name;
       // collect all components names
       if (name.startsWith(name[0].toUpperCase())) {
-        components.push(name);
+        components.add(name);
       }
       const attributes = convertAttributes(node, target, svgProps);
       if (node.children.length === 0) {
@@ -174,11 +174,11 @@ export const convertSvgToJsx = ({
     throw Error(error);
   }
   try {
-    const components = [];
+    const components = new Set();
     const jsx = convertXastToJsx(xast, target, svgProps, components);
     return {
       jsx,
-      components,
+      components: Array.from(components),
     };
   } catch (error) {
     throw Error(`${error.message}\nin ${file}`);
