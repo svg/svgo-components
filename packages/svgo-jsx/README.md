@@ -68,6 +68,7 @@ Frameworks handle attributes differently. React requires camelised "xlink:href",
   targetFile: string,
   componentName: string,
   jsx: string,
+  components: string[]
 }) => string;
 ```
 
@@ -141,10 +142,13 @@ SVGO plugins option to enable optimisations
 ### convertSvgToJsx
 
 ```js
-({ file: string, svg: string, svgProps, plugins = [] }) => string;
+({ file: string, svg: string, svgProps, plugins = [] }) => {
+  jsx: string,
+  components: string[]
+};
 ```
 
-Produces jsx without component wrapper.
+Produces jsx without component wrapper and list of components (capitalized tags).
 
 - target: same string as above
 - file: used for error reporting
