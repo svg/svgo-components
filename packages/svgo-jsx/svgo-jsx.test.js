@@ -224,8 +224,35 @@ test("support preact and ignores namespaced attributes", () => {
   `);
 });
 
+test("support custom target without transforming attributes", () => {
+  const { jsx, components } = convertSvgToJsx({
+    target: "custom",
+    file: "./test.svg",
+    svg: `
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24" xmlns:title="Title">
+          <rect x="0" y="0" width="24" height="24" fill-opacity="0.5" />
+          <use xlink:href="#id" />
+        </svg>
+      `,
+  });
+  expect(format(jsx)).toMatchInlineSnapshot(`
+"<svg
+  xmlns=\\"http://www.w3.org/2000/svg\\"
+  version=\\"1.1\\"
+  width=\\"24\\"
+  height=\\"24\\"
+  viewBox=\\"0 0 24 24\\"
+>
+  <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
+  <use />
+</svg>;
+"
+`);
+});
+
 test("output list of used components", () => {
   const { jsx, components } = convertSvgToJsx({
+    target: "custom",
     file: "./test.svg",
     svg: `
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24" xmlns:title="Title">
@@ -257,14 +284,13 @@ test("output list of used components", () => {
   expect(format(jsx)).toMatchInlineSnapshot(`
 "<Svg
   xmlns=\\"http://www.w3.org/2000/svg\\"
-  xmlnsXlink=\\"http://www.w3.org/1999/xlink\\"
   version=\\"1.1\\"
   width=\\"24\\"
   height=\\"24\\"
   viewBox=\\"0 0 24 24\\"
 >
-  <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fillOpacity=\\"0.5\\" />
-  <use xlinkHref=\\"#id\\" />
+  <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
+  <use />
 </Svg>;
 "
 `);

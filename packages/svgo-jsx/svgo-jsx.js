@@ -1,6 +1,36 @@
 import { optimize } from "svgo";
 import csstree from "css-tree";
-import { attributesMappings } from "./mappings.js";
+import { attributesMappings as reactAttributes } from "./mappings.js";
+
+const preactAttributes = { "xlink:href": "href" };
+
+const targetPlugin = (target) => ({
+  type: "visitor",
+  name: "svgo-jsx-target",
+  fn: () => {
+    let mappings = null;
+    if (target === "react-dom") {
+      mappings = reactAttributes;
+    }
+    if (target === "preact") {
+      mappings = preactAttributes;
+    }
+    if (mappings != null) {
+      return {
+        element: {
+          enter: (node) => {
+            const newAttributes = {};
+            // preserve an order of attributes
+            for (const [name, value] of Object.entries(node.attributes)) {
+              newAttributes[mappings[name] || name] = value;
+            }
+            node.attributes = newAttributes;
+          },
+        },
+      };
+    }
+  },
+});
 
 const convertStyleProperty = (property) => {
   if (property.startsWith("--")) {
@@ -29,26 +59,17 @@ const convertStyleToObject = (style) => {
   return styleObject;
 };
 
-const convertAttributes = (node, target, svgProps) => {
+const convertAttributes = (node, svgProps) => {
   const attributes = Object.entries(node.attributes);
   // use map to override existing attributes with passed props
   const props = new Map();
   for (const [name, value] of attributes) {
-    let newName = name;
-    if (target === "react-dom") {
-      newName = attributesMappings[name] || name;
-    }
-    if (target === "preact") {
-      if (name === "xlink:href") {
-        newName = "href";
-      }
-    }
-    if (newName === "style") {
+    if (name === "style") {
       const styleObject = convertStyleToObject(value);
-      props.set(newName, `{${JSON.stringify(styleObject)}}`);
+      props.set(name, `{${JSON.stringify(styleObject)}}`);
       // skip attributes with namespaces which are invalid jsx syntax
-    } else if (newName.includes(":") === false) {
-      props.set(newName, JSON.stringify(value));
+    } else if (name.includes(":") === false) {
+      props.set(name, JSON.stringify(value));
     }
   }
   if (node.name === "svg" && svgProps) {
@@ -77,18 +98,13 @@ const convertAttributes = (node, target, svgProps) => {
   return result;
 };
 
-const convertXastToJsx = (node, target, svgProps, components) => {
+const convertXastToJsx = (node, svgProps, components) => {
   switch (node.type) {
     case "root": {
       let renderedChildren = "";
       let renderedChildrenCount = 0;
       for (const child of node.children) {
-        const renderedChild = convertXastToJsx(
-          child,
-          target,
-          svgProps,
-          components
-        );
+        const renderedChild = convertXastToJsx(child, svgProps, components);
         if (renderedChild.length !== 0) {
           renderedChildren += renderedChild;
           renderedChildrenCount += 1;
@@ -106,18 +122,13 @@ const convertXastToJsx = (node, target, svgProps, components) => {
       if (name.startsWith(name[0].toUpperCase())) {
         components.add(name);
       }
-      const attributes = convertAttributes(node, target, svgProps);
+      const attributes = convertAttributes(node, svgProps);
       if (node.children.length === 0) {
         return `<${name}${attributes} />`;
       }
       let renderedChildren = "";
       for (const child of node.children) {
-        renderedChildren += convertXastToJsx(
-          child,
-          target,
-          svgProps,
-          components
-        );
+        renderedChildren += convertXastToJsx(child, svgProps, components);
       }
       return `<${name}${attributes}>${renderedChildren}</${name}>`;
     }
@@ -139,7 +150,7 @@ const convertXastToJsx = (node, target, svgProps, components) => {
   }
 };
 
-const validTargets = ["react-dom", "preact"];
+const validTargets = ["react-dom", "preact", "custom"];
 
 export const convertSvgToJsx = ({
   target = "react-dom",
@@ -149,10 +160,9 @@ export const convertSvgToJsx = ({
   plugins = [],
 }) => {
   let xast;
-  const extractXast = {
+  const extractXastPlugin = {
     type: "visitor",
     name: "svgo-jsx-extract-xast",
-    active: true,
     fn: (root) => {
       xast = root;
       return {};
@@ -168,14 +178,14 @@ export const convertSvgToJsx = ({
 
   const { error } = optimize(svg, {
     path: file,
-    plugins: [...plugins, extractXast],
+    plugins: [...plugins, targetPlugin(target), extractXastPlugin],
   });
   if (error) {
     throw Error(error);
   }
   try {
     const components = new Set();
-    const jsx = convertXastToJsx(xast, target, svgProps, components);
+    const jsx = convertXastToJsx(xast, svgProps, components);
     return {
       jsx,
       components: Array.from(components),
