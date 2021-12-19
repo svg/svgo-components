@@ -159,6 +159,68 @@ Produces jsx without component wrapper and list of components (capitalized tags)
 - svgProps: same object as above without any default
 - plugins: svgo plugins array without any default
 
+## Working with custom renderer
+
+Custom renderer is a SVGO plugin which prepares jsx to any not supported out of the box renderers
+by converting tag names and attributes.
+
+```js
+const customTargetPlugin = {
+  type: "visitor",
+  name: "svgo-jsx-custom",
+  fn: () => {
+    const customTags = {
+      svg: "Svg"
+    }
+    const customAttributes = {
+      "xlink:href": "xlinkHref"
+    }
+    return {
+      element: {
+        enter: (node) => {
+          node.name = customTags[node.name] ?? node.name;
+          // attributes recreation is used to preserve order
+          const newAttributes = {};
+          for (const [name, value] of Object.entries(node.attributes)) {
+            newAttributes[customAttributes[name] ?? name] = value;
+          }
+          node.attributes = newAttributes;
+        },
+      },
+    };
+  },
+};
+
+const template = ({ componentName, jsx, components }) => `
+import {${components.join(", ")}} from 'react-custom'
+
+export const ${componentName} = () => {
+  return (
+    ${jsx}
+  );
+}
+`;
+
+export const config = {
+  ...
+  target: 'custom',
+  template,
+  plugins: [
+    {
+      name: "preset-default",
+      params: {
+        overrides: {
+          removeViewBox: false,
+        },
+      },
+    },
+    { name: "removeXMLNS" },
+    { name: "prefixIds" },
+    customTargetPlugin
+  ]
+};
+```
+
 ## License and Copyright
 
 This software is released under the terms of the MIT license.
