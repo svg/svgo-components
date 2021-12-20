@@ -4,7 +4,7 @@ import { convertSvgToJsx } from "./svgo-jsx.js";
 
 const start = process.hrtime.bigint();
 
-const defaultTemplate = ({
+const commonTemplate = ({
   sourceFile,
   componentName,
   jsx,
@@ -16,6 +16,30 @@ export const ${componentName} = (props) => {
   );
 }
 `;
+
+const reactNativeSvgTemplate = ({
+  sourceFile,
+  componentName,
+  jsx,
+  components,
+}) => `// Generated from ${sourceFile}
+
+import {${components.join(", ")}} from 'react-native-svg'
+
+export const ${componentName} = (props) => {
+  return (
+    ${jsx}
+  );
+}
+`;
+
+const defaultTemplate = (options) => {
+  if (options.target === "react-native-svg") {
+    return reactNativeSvgTemplate(options);
+  } else {
+    return commonTemplate(options);
+  }
+};
 
 const defaultTransformFilename = (filename) => {
   const basename = path.basename(filename, path.extname(filename));
@@ -77,7 +101,9 @@ const run = async () => {
         count += 1;
         const svgFile = path.join(inputDir, dirent.name);
         const svg = await fs.readFile(svgFile, "utf-8");
+        const target = config.target || "react-dom";
         const { jsx, components } = convertSvgToJsx({
+          target,
           file: path.relative(configDir, svgFile),
           svg,
           svgProps: config.svgProps || defaultSvgProps,
@@ -91,11 +117,12 @@ const run = async () => {
         const jsxFilename = transformFilename(dirent.name);
         const jsxFile = path.join(outputDir, jsxFilename);
         const component = template({
+          target,
           sourceFile: path.relative(configDir, svgFile),
           targetFile: path.relative(configDir, jsxFile),
           componentName,
           jsx,
-          components
+          components,
         });
         await fs.mkdir(outputDir, { recursive: true });
         await fs.writeFile(jsxFile, component);

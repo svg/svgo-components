@@ -54,7 +54,7 @@ A path relative to config file with SVG files.
 
 A path relative to config svgo-jsx will write generated components into.
 
-**target**: optional "react-dom", "preact" or "custom"
+**target**: optional "react-dom", "react-native-svg", "preact" or "custom"
 
 Default: "react-dom"
 
@@ -67,6 +67,7 @@ to generate components for custom renerer.
 
 ```js
 ({
+  target: Target,
   sourceFile: string,
   targetFile: string,
   componentName: string,
@@ -145,7 +146,7 @@ SVGO plugins option to enable optimisations
 ### convertSvgToJsx
 
 ```js
-({ file: string, svg: string, svgProps, plugins = [] }) => {
+({ target: Target, file: string, svg: string, svgProps, plugins = [] }) => {
   jsx: string,
   components: string[]
 };

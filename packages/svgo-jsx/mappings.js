@@ -1,6 +1,6 @@
 // https://github.com/facebook/react/blob/419cc9c3799bc296c3c2a2c93880826aca680886/packages/react-dom/src/shared/possibleStandardNames.js
 
-export const attributesMappings = {
+export const reactAttributes = {
   // HTML
   accept: "accept",
   acceptcharset: "acceptCharset",
@@ -487,4 +487,33 @@ export const attributesMappings = {
   ychannelselector: "yChannelSelector",
   z: "z",
   zoomandpan: "zoomAndPan",
+};
+
+export const preactAttributes = { "xlink:href": "href" };
+
+export const reactNativeSvgTags = {
+  circle: "Circle",
+  clipPath: "ClipPath",
+  defs: "Defs",
+  ellipse: "Ellipse",
+  g: "G",
+  image: "Image",
+  line: "Line",
+  linearGradient: "LinearGradient",
+  path: "Path",
+  polygon: "Polygon",
+  polyline: "Polyline",
+  radialGradient: "RadialGradient",
+  rect: "Rect",
+  stop: "Stop",
+  svg: "Svg",
+  symbol: "Symbol",
+  text: "Text",
+  tspan: "TSpan",
+  textPath: "TextPath",
+  use: "Use",
+  mask: "Mask",
+  foreignObject: "ForeignObject",
+  marker: "Marker",
+  pattern: "Pattern",
 };
