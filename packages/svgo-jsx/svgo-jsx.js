@@ -1,8 +1,10 @@
 import { optimize } from "svgo";
 import csstree from "css-tree";
-import { attributesMappings as reactAttributes } from "./mappings.js";
-
-const preactAttributes = { "xlink:href": "href" };
+import {
+  reactAttributes,
+  preactAttributes,
+  reactNativeSvgTags,
+} from "./mappings.js";
 
 const targetPlugin = (target) => ({
   type: "visitor",
@@ -25,6 +27,28 @@ const targetPlugin = (target) => ({
               newAttributes[mappings[name] || name] = value;
             }
             node.attributes = newAttributes;
+          },
+        },
+      };
+    }
+    if (target === "react-native-svg") {
+      return {
+        element: {
+          enter: (node, parentNode) => {
+            if (reactNativeSvgTags[node.name] == null) {
+              // remove unknown elements
+              parentNode.children = parentNode.children.filter(
+                (item) => item !== node
+              );
+            } else {
+              node.name = reactNativeSvgTags[node.name];
+              const newAttributes = {};
+              // preserve an order of attributes
+              for (const [name, value] of Object.entries(node.attributes)) {
+                newAttributes[reactAttributes[name] || name] = value;
+              }
+              node.attributes = newAttributes;
+            }
           },
         },
       };
@@ -150,7 +174,7 @@ const convertXastToJsx = (node, svgProps, components) => {
   }
 };
 
-const validTargets = ["react-dom", "preact", "custom"];
+const validTargets = ["react-dom", "react-native-svg", "preact", "custom"];
 
 export const convertSvgToJsx = ({
   target = "react-dom",
