@@ -250,6 +250,25 @@ test("support custom target without transforming attributes", () => {
 `);
 });
 
+const capitalTagsPlugin = {
+  type: "visitor",
+  name: "capital-tags",
+  fn: () => {
+    return {
+      element: {
+        enter: (node) => {
+          if (node.name === "svg") {
+            node.name = "Svg";
+          }
+          if (node.name === "rect") {
+            node.name = "Rect";
+          }
+        },
+      },
+    };
+  },
+};
+
 test("output list of used components", () => {
   const { jsx, components } = convertSvgToJsx({
     target: "custom",
@@ -260,26 +279,7 @@ test("output list of used components", () => {
           <use xlink:href="#id" />
         </svg>
       `,
-    plugins: [
-      {
-        type: "visitor",
-        name: "capital-tags",
-        fn: () => {
-          return {
-            element: {
-              enter: (node) => {
-                if (node.name === "svg") {
-                  node.name = "Svg";
-                }
-                if (node.name === "rect") {
-                  node.name = "Rect";
-                }
-              },
-            },
-          };
-        },
-      },
-    ],
+    plugins: [capitalTagsPlugin],
   });
   expect(format(jsx)).toMatchInlineSnapshot(`
 "<Svg
@@ -295,4 +295,27 @@ test("output list of used components", () => {
 "
 `);
   expect(components).toEqual(["Svg", "Rect"]);
+});
+
+test("override existing svg attributes with passed props and custom target", () => {
+  const { jsx } = convertSvgToJsx({
+    target: "custom",
+    file: "./test.svg",
+    svg: `
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <rect x="0" y="0" width="24" height="24" />
+        </svg>
+      `,
+    svgProps: {
+      width: "{size}",
+    },
+    plugins: [capitalTagsPlugin],
+  });
+
+  expect(format(jsx)).toMatchInlineSnapshot(`
+    "<Svg height=\\"24\\" viewBox=\\"0 0 24 24\\" width={size}>
+      <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
+    </Svg>;
+    "
+  `);
 });

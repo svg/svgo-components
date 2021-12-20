@@ -73,6 +73,7 @@ export const Cog = (props) => {
       version=\\"1.1\\"
       xmlns=\\"http://www.w3.org/2000/svg\\"
       xmlnsXlink=\\"http://www.w3.org/1999/xlink\\"
+      {...props}
     >
       <g>
         <Circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\" fill=\\"url(#gradient)\\" />
@@ -118,7 +119,7 @@ import { Svg, G, Circle, Defs, LinearGradient, Stop } from \\"react-native-svg\\
 
 export const Cog = (props) => {
   return (
-    <Svg width=\\"24\\" height=\\"24\\" viewBox=\\"0 0 24 24\\">
+    <Svg width=\\"24\\" height=\\"24\\" viewBox=\\"0 0 24 24\\" {...props}>
       <G filter=\\"url(#cog_svg__a)\\" fill=\\"url(#cog_svg__b)\\">
         <Circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\" />
         <Circle cx=\\"24\\" cy=\\"12\\" r=\\"10\\" />

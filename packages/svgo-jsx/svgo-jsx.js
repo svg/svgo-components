@@ -96,7 +96,7 @@ const convertAttributes = (node, svgProps) => {
       props.set(name, JSON.stringify(value));
     }
   }
-  if (node.name === "svg" && svgProps) {
+  if ((node.name === "svg" || node.name === "Svg") && svgProps) {
     for (const [name, value] of Object.entries(svgProps)) {
       // delete previous prop before setting to reset order
       if (value == null) {
