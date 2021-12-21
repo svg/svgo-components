@@ -258,7 +258,7 @@ const capitalTagsPlugin = {
       element: {
         enter: (node) => {
           if (node.name === "svg") {
-            node.name = "Svg";
+            node.name = "Root";
           }
           if (node.name === "rect") {
             node.name = "Rect";
@@ -282,7 +282,7 @@ test("output list of used components", () => {
     plugins: [capitalTagsPlugin],
   });
   expect(format(jsx)).toMatchInlineSnapshot(`
-"<Svg
+"<Root
   xmlns=\\"http://www.w3.org/2000/svg\\"
   version=\\"1.1\\"
   width=\\"24\\"
@@ -291,10 +291,10 @@ test("output list of used components", () => {
 >
   <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
   <use />
-</Svg>;
+</Root>;
 "
 `);
-  expect(components).toEqual(["Svg", "Rect"]);
+  expect(components).toEqual(["Root", "Rect"]);
 });
 
 test("override existing svg attributes with passed props and custom target", () => {
@@ -313,9 +313,9 @@ test("override existing svg attributes with passed props and custom target", () 
   });
 
   expect(format(jsx)).toMatchInlineSnapshot(`
-    "<Svg height=\\"24\\" viewBox=\\"0 0 24 24\\" width={size}>
-      <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
-    </Svg>;
-    "
-  `);
+"<Root height=\\"24\\" viewBox=\\"0 0 24 24\\" width={size}>
+  <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
+</Root>;
+"
+`);
 });
