@@ -83,7 +83,7 @@ const convertStyleToObject = (style) => {
   return styleObject;
 };
 
-const convertAttributes = (node, parent, svgProps) => {
+const convertAttributes = (node, parentNode, svgProps) => {
   const attributes = Object.entries(node.attributes);
   // use map to override existing attributes with passed props
   const props = new Map();
@@ -96,7 +96,7 @@ const convertAttributes = (node, parent, svgProps) => {
       props.set(name, JSON.stringify(value));
     }
   }
-  if (parent && parent.type === "root" && svgProps) {
+  if (parentNode.type === "root" && svgProps) {
     for (const [name, value] of Object.entries(svgProps)) {
       // delete previous prop before setting to reset order
       if (value == null) {
@@ -122,7 +122,7 @@ const convertAttributes = (node, parent, svgProps) => {
   return result;
 };
 
-const convertXastToJsx = (node, parent, svgProps, components) => {
+const convertXastToJsx = (node, parentNode, svgProps, components) => {
   switch (node.type) {
     case "root": {
       let renderedChildren = "";
@@ -151,7 +151,7 @@ const convertXastToJsx = (node, parent, svgProps, components) => {
       if (name.startsWith(name[0].toUpperCase())) {
         components.add(name);
       }
-      const attributes = convertAttributes(node, parent, svgProps);
+      const attributes = convertAttributes(node, parentNode, svgProps);
       if (node.children.length === 0) {
         return `<${name}${attributes} />`;
       }
