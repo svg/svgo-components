@@ -83,7 +83,7 @@ const convertStyleToObject = (style) => {
   return styleObject;
 };
 
-const convertAttributes = (node, svgProps) => {
+const convertAttributes = (node, parentNode, svgProps) => {
   const attributes = Object.entries(node.attributes);
   // use map to override existing attributes with passed props
   const props = new Map();
@@ -96,7 +96,7 @@ const convertAttributes = (node, svgProps) => {
       props.set(name, JSON.stringify(value));
     }
   }
-  if (node.name === "svg" && svgProps) {
+  if (parentNode.type === "root" && svgProps) {
     for (const [name, value] of Object.entries(svgProps)) {
       // delete previous prop before setting to reset order
       if (value == null) {
@@ -122,13 +122,18 @@ const convertAttributes = (node, svgProps) => {
   return result;
 };
 
-const convertXastToJsx = (node, svgProps, components) => {
+const convertXastToJsx = (node, parentNode, svgProps, components) => {
   switch (node.type) {
     case "root": {
       let renderedChildren = "";
       let renderedChildrenCount = 0;
       for (const child of node.children) {
-        const renderedChild = convertXastToJsx(child, svgProps, components);
+        const renderedChild = convertXastToJsx(
+          child,
+          node,
+          svgProps,
+          components
+        );
         if (renderedChild.length !== 0) {
           renderedChildren += renderedChild;
           renderedChildrenCount += 1;
@@ -146,13 +151,13 @@ const convertXastToJsx = (node, svgProps, components) => {
       if (name.startsWith(name[0].toUpperCase())) {
         components.add(name);
       }
-      const attributes = convertAttributes(node, svgProps);
+      const attributes = convertAttributes(node, parentNode, svgProps);
       if (node.children.length === 0) {
         return `<${name}${attributes} />`;
       }
       let renderedChildren = "";
       for (const child of node.children) {
-        renderedChildren += convertXastToJsx(child, svgProps, components);
+        renderedChildren += convertXastToJsx(child, node, svgProps, components);
       }
       return `<${name}${attributes}>${renderedChildren}</${name}>`;
     }
@@ -209,7 +214,7 @@ export const convertSvgToJsx = ({
   }
   try {
     const components = new Set();
-    const jsx = convertXastToJsx(xast, svgProps, components);
+    const jsx = convertXastToJsx(xast, null, svgProps, components);
     return {
       jsx,
       components: Array.from(components),
