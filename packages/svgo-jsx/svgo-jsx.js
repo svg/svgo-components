@@ -162,12 +162,10 @@ const convertXastToJsx = (node, parentNode, svgProps, components) => {
       return `<${name}${attributes}>${renderedChildren}</${name}>`;
     }
     case "text":
-      throw Error("Text is not supported yet");
-    // return `{${JSON.stringify(node.value)}}`;
+      return `{${JSON.stringify(node.value)}}`;
 
     case "cdata":
-      throw Error("CDATA is not supported yet");
-    // return `{${JSON.stringify(node.value)}}`;
+      return `{${JSON.stringify(node.value)}}`;
     case "comment":
       return `{/* ${node.value} */}`;
     case "doctype":

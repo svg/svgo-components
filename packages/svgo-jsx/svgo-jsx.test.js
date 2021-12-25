@@ -49,7 +49,23 @@ test("wrap with fragment when toplevel comment is present", () => {
   `);
 });
 
-test.todo("render text and cdata properly");
+test("render text and cdata properly", () => {
+  const svg = `
+    <svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <style> .st0 > .st1 { fill: yellow; } </style>
+      <style>
+        <![CDATA[ .st1 > .st2 { fill: red; } ]]>
+      </style>
+    </svg>
+  `;
+  expect(convertAndFormat({ file: "./test.svg", svg })).toMatchInlineSnapshot(`
+"<svg id=\\"test\\" xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
+  <style>{\\".st0 > .st1 { fill: yellow; }\\"}</style>
+  <style>{\\" .st1 > .st2 { fill: red; } \\"}</style>
+</svg>;
+"
+`);
+});
 
 test("convert style attribute with proper prefixes", () => {
   expect(
