@@ -23,9 +23,9 @@ test("render all nodes except doctype and instruction", () => {
       `,
     })
   ).toMatchInlineSnapshot(`
-    "<svg version=\\"1.1\\" width=\\"24\\" height=\\"24\\" viewBox=\\"0 0 24 24\\">
+    "<svg version="1.1" width="24" height="24" viewBox="0 0 24 24">
       {/* test rectangle */}
-      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
+      <rect x="0" y="0" width="24" height="24" />
     </svg>;
     "
   `);
@@ -59,12 +59,12 @@ test("render text and cdata properly", () => {
     </svg>
   `;
   expect(convertAndFormat({ file: "./test.svg", svg })).toMatchInlineSnapshot(`
-"<svg id=\\"test\\" xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 100 100\\">
-  <style>{\\".st0 > .st1 { fill: yellow; }\\"}</style>
-  <style>{\\" .st1 > .st2 { fill: red; } \\"}</style>
-</svg>;
-"
-`);
+    "<svg id="test" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <style>{".st0 > .st1 { fill: yellow; }"}</style>
+      <style>{" .st1 > .st2 { fill: red; } "}</style>
+    </svg>;
+    "
+  `);
 });
 
 test("convert style attribute with proper prefixes", () => {
@@ -82,24 +82,24 @@ test("convert style attribute with proper prefixes", () => {
   ).toMatchInlineSnapshot(`
     "<svg>
       <rect
-        x=\\"0\\"
-        y=\\"0\\"
-        width=\\"24\\"
-        height=\\"24\\"
-        style={{ fill: \\"#000\\", fillOpacity: \\"0.5\\" }}
+        x="0"
+        y="0"
+        width="24"
+        height="24"
+        style={{ fill: "#000", fillOpacity: "0.5" }}
       />
       <rect
-        x=\\"0\\"
-        y=\\"0\\"
-        width=\\"24\\"
-        height=\\"24\\"
+        x="0"
+        y="0"
+        width="24"
+        height="24"
         style={{
-          WebkitAppearance: \\"none\\",
-          MozAppearance: \\"none\\",
-          msAppearance: \\"none\\",
+          WebkitAppearance: "none",
+          MozAppearance: "none",
+          msAppearance: "none",
         }}
       />
-      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" style={{ \\"--custom\\": \\"#000\\" }} />
+      <rect x="0" y="0" width="24" height="24" style={{ "--custom": "#000" }} />
     </svg>;
     "
   `);
@@ -117,14 +117,14 @@ test("convert attribute names", () => {
     })
   ).toMatchInlineSnapshot(`
     "<svg
-      xmlns=\\"http://www.w3.org/2000/svg\\"
-      xmlnsXlink=\\"http://www.w3.org/1999/xlink\\"
-      version=\\"1.1\\"
-      width=\\"24\\"
-      height=\\"24\\"
-      viewBox=\\"0 0 24 24\\"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      version="1.1"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
     >
-      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fillOpacity=\\"0.5\\" />
+      <rect x="0" y="0" width="24" height="24" fillOpacity="0.5" />
     </svg>;
     "
   `);
@@ -139,7 +139,7 @@ test("preserve aria-*, data-* and unknown attributes", () => {
       `,
     })
   ).toMatchInlineSnapshot(`
-    "<svg aria-label=\\"icon\\" data-value=\\"1\\" custom-attr=\\"value\\" />;
+    "<svg aria-label="icon" data-value="1" custom-attr="value" />;
     "
   `);
 });
@@ -162,15 +162,15 @@ test("allow to pass and spread svg props", () => {
     })
   ).toMatchInlineSnapshot(`
     "<svg
-      width=\\"24\\"
-      height=\\"24\\"
-      viewBox=\\"0 0 24 24\\"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
       {...defaults}
       className={className}
-      fill=\\"#000\\"
+      fill="#000"
       {...props}
     >
-      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
+      <rect x="0" y="0" width="24" height="24" />
     </svg>;
     "
   `);
@@ -190,8 +190,8 @@ test("override existing svg attributes with passed props", () => {
       },
     })
   ).toMatchInlineSnapshot(`
-    "<svg height=\\"24\\" viewBox=\\"0 0 24 24\\" width={size}>
-      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
+    "<svg height="24" viewBox="0 0 24 24" width={size}>
+      <rect x="0" y="0" width="24" height="24" />
     </svg>;
     "
   `);
@@ -209,7 +209,7 @@ test("allow to pass svgo plugins", () => {
       plugins: ["preset-default"],
     }).jsx
   ).toMatchInlineSnapshot(
-    `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24\\" height=\\"24\\"><path d=\\"M0 0h24v24H0z\\" /></svg>"`
+    `"<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M0 0h24v24H0z" /></svg>"`
   );
 });
 
@@ -227,14 +227,14 @@ test("support preact and ignores namespaced attributes", () => {
     })
   ).toMatchInlineSnapshot(`
     "<svg
-      xmlns=\\"http://www.w3.org/2000/svg\\"
-      version=\\"1.1\\"
-      width=\\"24\\"
-      height=\\"24\\"
-      viewBox=\\"0 0 24 24\\"
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
     >
-      <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
-      <use href=\\"#id\\" />
+      <rect x="0" y="0" width="24" height="24" fill-opacity="0.5" />
+      <use href="#id" />
     </svg>;
     "
   `);
@@ -252,18 +252,18 @@ test("support custom target without transforming attributes", () => {
       `,
   });
   expect(format(jsx)).toMatchInlineSnapshot(`
-"<svg
-  xmlns=\\"http://www.w3.org/2000/svg\\"
-  version=\\"1.1\\"
-  width=\\"24\\"
-  height=\\"24\\"
-  viewBox=\\"0 0 24 24\\"
->
-  <rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
-  <use />
-</svg>;
-"
-`);
+    "<svg
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <rect x="0" y="0" width="24" height="24" fill-opacity="0.5" />
+      <use />
+    </svg>;
+    "
+  `);
 });
 
 const capitalTagsPlugin = {
@@ -298,18 +298,18 @@ test("output list of used components", () => {
     plugins: [capitalTagsPlugin],
   });
   expect(format(jsx)).toMatchInlineSnapshot(`
-"<Root
-  xmlns=\\"http://www.w3.org/2000/svg\\"
-  version=\\"1.1\\"
-  width=\\"24\\"
-  height=\\"24\\"
-  viewBox=\\"0 0 24 24\\"
->
-  <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" fill-opacity=\\"0.5\\" />
-  <use />
-</Root>;
-"
-`);
+    "<Root
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <Rect x="0" y="0" width="24" height="24" fill-opacity="0.5" />
+      <use />
+    </Root>;
+    "
+  `);
   expect(components).toEqual(["Root", "Rect"]);
 });
 
@@ -329,9 +329,9 @@ test("override existing svg attributes with passed props and custom target", () 
   });
 
   expect(format(jsx)).toMatchInlineSnapshot(`
-"<Root height=\\"24\\" viewBox=\\"0 0 24 24\\" width={size}>
-  <Rect x=\\"0\\" y=\\"0\\" width=\\"24\\" height=\\"24\\" />
-</Root>;
-"
-`);
+    "<Root height="24" viewBox="0 0 24 24" width={size}>
+      <Rect x="0" y="0" width="24" height="24" />
+    </Root>;
+    "
+  `);
 });
