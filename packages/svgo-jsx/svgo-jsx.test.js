@@ -267,7 +267,6 @@ test("support custom target without transforming attributes", () => {
 });
 
 const capitalTagsPlugin = {
-  type: "visitor",
   name: "capital-tags",
   fn: () => {
     return {

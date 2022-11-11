@@ -7,7 +7,6 @@ import {
 } from "./mappings.js";
 
 const targetPlugin = (target) => ({
-  type: "visitor",
   name: "svgo-jsx-target",
   fn: () => {
     let mappings = null;
@@ -188,7 +187,6 @@ export const convertSvgToJsx = ({
 }) => {
   let xast;
   const extractXastPlugin = {
-    type: "visitor",
     name: "svgo-jsx-extract-xast",
     fn: (root) => {
       xast = root;
@@ -203,13 +201,10 @@ export const convertSvgToJsx = ({
     );
   }
 
-  const { error } = optimize(svg, {
+  optimize(svg, {
     path: file,
     plugins: [...plugins, targetPlugin(target), extractXastPlugin],
   });
-  if (error) {
-    throw Error(error);
-  }
   try {
     const components = new Set();
     const jsx = convertXastToJsx(xast, null, svgProps, components);

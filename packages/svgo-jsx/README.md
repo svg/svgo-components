@@ -167,7 +167,6 @@ by converting tag names and attributes.
 
 ```js
 const customTargetPlugin = {
-  type: "visitor",
   name: "svgo-jsx-custom",
   fn: () => {
     const customTags = {

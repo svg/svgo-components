@@ -20,7 +20,6 @@ export const config = {
   template,
   plugins: [
     {
-      type: "visitor",
       name: "capital-tags",
       fn: () => {
         return {
