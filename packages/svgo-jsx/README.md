@@ -222,6 +222,21 @@ export const config = {
 };
 ```
 
+## How to generate index.js if you really need it
+
+```js
+export const config = {
+  after: async ({ targets }) => {
+    let result = ''
+    for (const { file, componentName } of targets) {
+      result += `export { ${componentName} } from './${file}'\n`
+    }
+    await fs.writeFile('icons/index.js', result)
+  }
+}
+```
+
+
 ## License and Copyright
 
 This software is released under the terms of the MIT license.

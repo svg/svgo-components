@@ -99,8 +99,10 @@ const run = async () => {
   const template = config.template ?? defaultTemplate;
   const transformFilename =
     config.transformFilename ?? defaultTransformFilename;
+  const after = config.after;
 
   const list = await fs.readdir(inputDir, { withFileTypes: true });
+  const targets = [];
   await Promise.all(
     list.map(async (dirent) => {
       if (dirent.isFile()) {
@@ -128,9 +130,15 @@ const run = async () => {
         });
         await fs.mkdir(outputDir, { recursive: true });
         await fs.writeFile(jsxFile, component);
+        targets.push({
+          file: jsxFilename,
+          componentName,
+        });
       }
     })
   );
+
+  await after?.({ targets });
 
   const end = process.hrtime.bigint();
 

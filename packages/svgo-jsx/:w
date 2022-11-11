@@ -144,16 +144,10 @@ test("supports react-native-svg target with imports and remove unknown elements"
   `);
 });
 
-test('should run "after" callback with the list of generated jsx files ', async () => {
+test("after", async () => {
   const cli = path.join(dir, "./svgo-jsx-cli.js");
-  const config = path.join(dir, "./fixtures/after.config.js");
+  const config = path.join(dir, "./fixtures/components.config.js");
   const { stdout, stderr } = await exec(`node ${cli} ${config}`);
   expect(stderr).toBe("");
-  // find log after start and before end
-  const log = stdout.split("===start===")[1].split("===end===")[0];
-  expect(log).toMatchInlineSnapshot(`
-    "
-    [ { file: 'cog.js', componentName: 'Cog' } ]
-    "
-  `);
+  expect(stdout).toMatchInlineSnapshot();
 });
