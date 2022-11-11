@@ -13,10 +13,12 @@
     "svgo-jsx": "./svgo-jsx-bin.js"
   },
   "exports": "./svgo-jsx.js",
+  "types": "./svgo-jsx.d.ts",
   "files": [
     "svgo-jsx-bin.js",
     "svgo-jsx-cli.js",
     "svgo-jsx.js",
+    "svgo-jsx.d.ts",
     "mappings.js"
   ],
   "dependencies": {
