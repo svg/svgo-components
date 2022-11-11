@@ -32,8 +32,8 @@ test("cli converts svg into component with default config", async () => {
             <linearGradient
               id="cog_svg__a"
               x1="4.083"
-              y1="23.97"
               x2="23.15"
+              y1="23.97"
               y2="4.904"
               gradientUnits="userSpaceOnUse"
             >
@@ -120,7 +120,7 @@ test("supports react-native-svg target with imports and remove unknown elements"
     export const Cog = (props) => {
       return (
         <Svg width="24" height="24" viewBox="0 0 24 24" {...props}>
-          <G filter="url(#cog_svg__a)" fill="url(#cog_svg__b)">
+          <G fill="url(#cog_svg__b)" filter="url(#cog_svg__a)">
             <Circle cx="12" cy="12" r="10" />
             <Circle cx="24" cy="12" r="10" />
           </G>
@@ -128,8 +128,8 @@ test("supports react-native-svg target with imports and remove unknown elements"
             <LinearGradient
               id="cog_svg__b"
               x1="4.083"
-              y1="23.97"
               x2="23.15"
+              y1="23.97"
               y2="4.904"
               gradientUnits="userSpaceOnUse"
             >

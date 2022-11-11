@@ -1,5 +1,5 @@
 import { optimize } from "svgo";
-import csstree from "css-tree";
+import { parse, walk } from "css-tree";
 import {
   reactAttributes,
   preactAttributes,
@@ -71,11 +71,11 @@ const convertStyleProperty = (property) => {
 
 const convertStyleToObject = (style) => {
   const styleObject = {};
-  const ast = csstree.parse(style, {
+  const ast = parse(style, {
     context: "declarationList",
     parseValue: false,
   });
-  csstree.walk(ast, (node) => {
+  walk(ast, (node) => {
     if (node.type === "Declaration") {
       styleObject[convertStyleProperty(node.property)] = node.value.value;
     }

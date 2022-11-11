@@ -99,7 +99,7 @@ test("convert style attribute with proper prefixes", () => {
           msAppearance: "none",
         }}
       />
-      <rect x="0" y="0" width="24" height="24" style={{ "--custom": "#000" }} />
+      <rect x="0" y="0" width="24" height="24" style={{ "--custom": " #000" }} />
     </svg>;
     "
   `);
