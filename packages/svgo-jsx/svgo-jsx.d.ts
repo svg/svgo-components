@@ -43,5 +43,5 @@ export type Config = {
   plugins?: SvgoConfig["plugins"];
   template?: (options: TemplateOptions) => string;
   transformFilename?: (file: string) => string;
-  after?: AfterOptions;
+  after?: (options: AfterOptions) => void | Awaited<void>;
 };
