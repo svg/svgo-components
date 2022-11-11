@@ -1,5 +1,5 @@
-import { promises as fs } from "fs";
-import path from "path";
+import * as fs from "fs/promises";
+import * as path from "path";
 import { convertSvgToJsx } from "./svgo-jsx.js";
 
 const start = process.hrtime.bigint();
@@ -93,6 +93,12 @@ const run = async () => {
 
   const inputDir = path.join(configDir, config.inputDir);
   const outputDir = path.join(configDir, config.outputDir);
+  const target = config.target ?? "react-dom";
+  const svgProps = config.svgProps ?? defaultSvgProps;
+  const plugins = config.plugins ?? defaultPlugins;
+  const template = config.template ?? defaultTemplate;
+  const transformFilename =
+    config.transformFilename ?? defaultTransformFilename;
 
   const list = await fs.readdir(inputDir, { withFileTypes: true });
   await Promise.all(
@@ -101,18 +107,14 @@ const run = async () => {
         count += 1;
         const svgFile = path.join(inputDir, dirent.name);
         const svg = await fs.readFile(svgFile, "utf-8");
-        const target = config.target || "react-dom";
         const { jsx, components } = convertSvgToJsx({
           target,
           file: path.relative(configDir, svgFile),
           svg,
-          svgProps: config.svgProps || defaultSvgProps,
-          plugins: config.plugins || defaultPlugins,
+          svgProps,
+          plugins,
         });
 
-        const template = config.template || defaultTemplate;
-        const transformFilename =
-          config.transformFilename || defaultTransformFilename;
         const componentName = transformComponentName(dirent.name);
         const jsxFilename = transformFilename(dirent.name);
         const jsxFile = path.join(outputDir, jsxFilename);
