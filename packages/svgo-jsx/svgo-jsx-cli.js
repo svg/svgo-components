@@ -138,6 +138,8 @@ const run = async () => {
     })
   );
 
+  targets.sort((a, b) => a.file.localeCompare(b.file));
+
   await after?.({ targets });
 
   const end = process.hrtime.bigint();
