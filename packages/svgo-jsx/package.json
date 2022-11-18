@@ -1,6 +1,6 @@
 {
   "name": "@svgo/jsx",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Transform SVG into JSX components",
   "author": "Bogdan Chadkin <trysound@yandex.ru>",
   "repository": {
